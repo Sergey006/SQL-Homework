@@ -1,0 +1,63 @@
+/*
+1. Создать БД, изображенную на рисунке (создать таблицы и внешний ключ)
+2. Внести в таблицы следующие данные.
+Dept:    (1, 'Marketing'), (2, 'RD')
+Emp:    (1, 1, 'James', 1000), (2, 2, 'Smith', 2000)
+3. Создать таблицу dept_arch с такой же структурой, как и у таблицы dept.
+4. Вставить в таблицу dept_arch все данные из таблицы dept.
+5. Увеличьте на 15% зарплату сотруднику Smith.
+6. Убедитесь, что в таблицу dept нельзя вставить такую запись: (2, 'Sales'). Почему?
+7. Убедитесь, что в таблицу emp нельзя вставить такую запись: (3, 4, 'Black', 3000, 'Active'). Почему?
+8. Измените название отдела RD на RandD (таблица dept).
+9. Удалите из таблицы emp запись с emp_id = 1.
+10. Удалите из таблицы emp все записи.
+11. Удалите таблицу emp.
+*/
+
+CREATE TABLE dept(
+  dept_id INTEGER PRIMARY KEY,
+  dname VARCHAR(20)
+);
+
+CREATE TABLE emp(
+  emp_id INTEGER,
+  dept_id INTEGER FOREIGN KEY REFERENCES dept(dept_id),
+  ename VARCHAR(15),
+  salary NUMERIC(6,2)
+);
+
+INSERT INTO dept VALUES(1,'Marketing');
+INSERT INTO dept VALUES(2, 'RD');
+
+INSERT INTO emp VALUES(1, 1, 'James', 1000);
+INSERT INTO emp VALUES(2, 2, 'Smith', 2000);
+
+CREATE TABLE dept_arch(
+  dept_id INTEGER,
+  dname VARCHAR(20)
+);
+
+INSERT INTO dept_arch
+SELECT * FROM dept;
+
+UPDATE emp
+SET salary = salary * 1.15
+WHERE ename ='Smith';
+
+-- INSERT INTO dept VALUES(2, 'Sales');
+-- Невозможно выполнить, так как значение столбца dept_id должно быть уникальным, а 2 уже присутствует
+
+-- INSERT INTO emp VALUES(3, 4, 'Black', 3000, 'Active');
+-- Невозможно выполнить, так как в таблице emp всего 4 столбца
+
+
+UPDATE dept
+SET dname = 'RandD'
+WHERE  dname = 'RD';
+
+DELETE FROM emp
+WHERE emp_id = 1;
+
+TRUNCATE TABLE emp;
+
+DROP TABLE emp;
