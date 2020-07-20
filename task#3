@@ -77,4 +77,23 @@ FROM purchase
 INNER JOIN product ON purchase.product_name = product.product_name
 INNER JOIN person ON purchase.salesperson = person.person_code;
 
--- 4
+-- 4. Напишите запрос, выводящий столбцы product_name, first_name, last_name внешнего объединения таблиц purchase и person. Используйте для таблиц короткие псевдонимы.
+SELECT pur.product_name, pr.first_name, pr.last_name
+FROM purchase AS pur
+LEFT JOIN person AS pr
+ON pur.salesperson = pr.person_code;
+
+-- 5. Напишите запрос, который выводит коды продавцов salesperson из таблицы purchase_archive , которые не повторяются в таблице purchase.
+SELECT salesperson FROM purchase_archive
+EXCEPT
+SELECT salesperson FROM purchase;
+
+-- 6. Напишите запрос, который выводит коды только тех продавцов salesperson из таблицы purchase, которые так же содержатся в таблице purchase_archive.
+SELECT salesperson FROM purchase
+INTERSECT
+SELECT salesperson FROM purchase_archive;
+
+-- 7. Напишите запрос, который выводит все (в том числе повторяющиеся) коды продавцов salesperson из таблиц purchase и purchase_archive.
+SELECT salesperson FROM purchase_archive
+UNION ALL
+SELECT salesperson FROM purchase;
