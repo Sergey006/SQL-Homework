@@ -1,0 +1,83 @@
+set DATEFORMAT 'dmy';
+CREATE TABLE person(
+  person_code VARCHAR(3) PRIMARY KEY,
+  first_name VARCHAR(15),
+  last_name VARCHAR(20),
+  hiredate DATE
+  );
+
+CREATE TABLE product(
+  product_name VARCHAR(25) PRIMARY KEY,
+  product_price NUMERIC(8,2),
+  quantity_on_hand NUMERIC(5,0),
+  laststockdate DATE
+  );
+  
+CREATE TABLE purchase(
+  product_name VARCHAR(25) FOREIGN KEY REFERENCES product(product_name),
+  salesperson VARCHAR(3) FOREIGN KEY REFERENCES person(person_code),
+  purchase_date DATE,
+  quantity NUMERIC(4,2)
+  );
+
+CREATE TABLE purchase_archive(
+  product_name VARCHAR(25),
+  salesperson VARCHAR(3),
+  purchase_date DATE,
+  quantity NUMERIC(4,2)
+  );
+  
+CREATE TABLE old_item(
+  item_id CHAR(20),
+  item_desc CHAR(25)
+  );
+
+INSERT INTO person VALUES ('BB','Bobby','Barkenhagen','28.02.2010');
+INSERT INTO person VALUES ('CA','Charlene','Atlas','01.02.2010');
+INSERT INTO person VALUES ('DS','Dany','Smith','15.02.2002');
+INSERT INTO person VALUES ('GA','Gary','Anderson','15.02.2010');
+INSERT INTO person VALUES ('JS','John','Smith','15.02.2002');
+INSERT INTO person VALUES ('LB','Laren','Baxter','01.03.2010');
+
+INSERT INTO product VALUES ('Chrome Phoobar',50.00,100,'15.01.2011');
+INSERT INTO product VALUES ('Extra Huge Mega Phoobar +',9.5,1234,'15.01.2012');
+INSERT INTO product VALUES ('Large Widget',NULL,5,'11.01.2011');
+INSERT INTO product VALUES ('Medium Widget',75.00,1000,'15.01.2010');
+INSERT INTO product VALUES ('Round Chrome Snaphoo',25.00,10000,NULL);
+INSERT INTO product VALUES ('Small Widget',99.00,1,'15.01.2011');
+INSERT INTO product VALUES ('Square Zinculator',45.00,1,'31.12.2010');
+
+INSERT INTO purchase VALUES ('Small Widget','CA','14.07.2011',1.00);
+INSERT INTO purchase VALUES ('Medium Widget','BB','14.07.2011',75.00);
+INSERT INTO purchase VALUES ('Chrome Phoobar','GA','14.07.2011',2.00);
+INSERT INTO purchase VALUES ('Small Widget','GA','15.07.2011',8.00);
+INSERT INTO purchase VALUES ('Medium Widget','LB','15.07.2011',20.00);
+INSERT INTO purchase VALUES ('Round Chrome Snaphoo','CA','16.07.2011',5.00);
+
+INSERT INTO purchase_archive VALUES ('Round Snaphoo','BB','21.06.2001',10.00);
+INSERT INTO purchase_archive VALUES ('Large Harf li','GA','22.06.2001',50.00);
+INSERT INTO purchase_archive VALUES ('Medium Wodget','LB','23.06.2001',20.00);
+INSERT INTO purchase_archive VALUES ('Small Widget','ZZ','24.06.2002',80.00);
+INSERT INTO purchase_archive VALUES ('Chrome Phoobar','CA','25.06.2002',2.00);
+INSERT INTO purchase_archive VALUES ('Small Widget','JT','26.06.2002',50.00);
+
+/*
+1. Использую функции для работы с датами и числами, посчитайте, сколько вам полных лет.
+2. Выведите строку 'я ЗнаЮ тЕкСтовыЕ фУнкциИ' в верхнем и нижнем регистре.
+3. Узнайте длину этой строки.
+4. Работая со столбцом purchase.product_name, выведите:
+первые три символа
+все оставшиеся символы, начиная с четвёртого
+полную строку
+*/
+-- 1
+SELECT DATEDIFF(YEAR, '06-MAR-1995', GETDATE()) as 'My age';
+-- 2
+SELECT UPPER('я ЗнаЮ тЕкСтовыЕ фУнкциИ');
+SELECT LOWER('я ЗнаЮ тЕкСтовыЕ фУнкциИ');
+-- 3
+SELECT LEN('я ЗнаЮ тЕкСтовыЕ фУнкциИ') as 'length';
+-- 4
+SELECT SUBSTRING(product_name, 1, 3) as 'first three symbols' FROM purchase;
+SELECT SUBSTRING(product_name, 4, len(product_name) - 3) as 'other symbols' FROM purchase;
+SELECT SUBSTRING(product_name, 1, len(product_name)) as 'full name' FROM purchase;
